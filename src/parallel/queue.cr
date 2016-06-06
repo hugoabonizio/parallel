@@ -1,30 +1,39 @@
-class Queue(T)
-  def initialize
-    @mutex = Thread::Mutex.new
-    @cond = Thread::ConditionVariable.new
-    @elems = [] of T
-  end
+module Parallel
+  class Queue(T)
+    getter elems
 
-  def <<(item)
-    @mutex.synchronize do
-      @elems << item
-      @cond.signal
+    def initialize
+      @mutex = Thread::Mutex.new
+      @cond = Thread::ConditionVariable.new
+      @elems = [] of T
     end
-  end
 
-  def pop
-    @mutex.synchronize do
-      while true
-        if @elems.empty?
-          @cond.wait @mutex
-        else
-          @elems.pop
+    def initialize(@elems : T)
+      @mutex = Thread::Mutex.new
+      @cond = Thread::ConditionVariable.new
+    end
+
+    def <<(item)
+      @mutex.synchronize do
+        @elems << item
+        @cond.signal
+      end
+    end
+
+    def pop
+      @mutex.synchronize do
+        while true
+          if @elems.empty?
+            @cond.wait @mutex
+          else
+            return @elems.shift
+          end
         end
       end
     end
-  end
 
-  def size
-    @elems.size
+    def size
+      @elems.size
+    end
   end
 end
