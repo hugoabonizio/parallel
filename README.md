@@ -3,15 +3,15 @@
 Parallel processing in Crystal
 
 ```crystal
-Parallel.map(1..10) do |x|
-  # CPU-heavy stuff...
+Parallel.each(1..10) do |x|
+  # CPU heavy task...
   puts x
 end
 ```
 
 ```crystal
-Parallel.map(['a', 'b', 'c']) do |x|
-  # CPU-heavy stuff...
+Parallel.each(['a', 'b', 'c']) do |x|
+  # CPU heavy task...
   puts x
 end
 ```
